@@ -14,6 +14,8 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.geom.Line2D;
 import java.io.IOException;
 import javax.swing.JFrame;
@@ -30,8 +32,8 @@ public class MapView
 {
     private JFrame frame;
     //min x-coordinate and max y-coordinate, subtracted from to make map origin in 0,0
-    private final int MAX_Y = 6403000;
-    private final int MIN_X = 441000; 
+    public int MAX_Y = 6403000;
+    public int MIN_X = 441000; 
     public int minWidth = 800;
     public int minHeight = 600;
     public int xDivisor = 600; //initial x-dividant value
@@ -52,15 +54,47 @@ public class MapView
                 System.out.println("Window Resized: Frame");
             }
         });
-    }
+        
+        frame.addKeyListener(new KeyListener() {
+
+                    @Override
+                    public void keyTyped(KeyEvent e) {}
+
+                    @Override
+                    public void keyReleased(KeyEvent e) {}
+
+                    @Override //Move and repaint map in window
+                    public void keyPressed(KeyEvent e) {
+                        System.out.println("Pressed " + e.getKeyCode());
+                        		
+                        if (e.getKeyCode() == 37){
+                           MIN_X = MIN_X+5000; System.out.println(MIN_X);
+                        }   
+                        else if (e.getKeyCode() == 39){
+                           MIN_X = MIN_X-5000;  System.out.println(MIN_X);
+                        }   
+                        else if (e.getKeyCode() == 38){
+                           MAX_Y = MAX_Y-5000;  System.out.println(MAX_Y);
+                        }
+                        else if (e.getKeyCode()== 40){
+                           MAX_Y = MAX_Y+5000;  System.out.println(MAX_Y);
+                        }
+                        frame.repaint();
+                        
+                    
+                }
+        });
+                }
+
+                    
  
     class DrawPanel extends JPanel
     {
- 
+        
         @Override
         public void paintComponent(Graphics g)
         {
- 
+           
             super.paintComponent(g);
             try {
                 doDrawing(g);
@@ -68,7 +102,7 @@ public class MapView
                 System.out.println("Cannot find specified file");
             }
         }
-        
+       
         @Override
         public Dimension getPreferredSize()
         {
@@ -108,8 +142,8 @@ public class MapView
             }
  
         }
-    }
- 
+        }
+    
     
     public static void main(String[] args)
     {
