@@ -114,16 +114,16 @@ public class MapView
                         System.out.println("Pressed " + e.getKeyCode());
                         		
                         if (e.getKeyCode() == 37){
-                           MIN_X = MIN_X+5000; System.out.println(MIN_X);
+                           MIN_X = MIN_X-5000; System.out.println(MIN_X);
                         }   
                         else if (e.getKeyCode() == 39){
-                           MIN_X = MIN_X-5000;  System.out.println(MIN_X);
+                           MIN_X = MIN_X+5000;  System.out.println(MIN_X);
                         }   
                         else if (e.getKeyCode() == 38){
-                           MAX_Y = MAX_Y-5000;  System.out.println(MAX_Y);
+                           MAX_Y = MAX_Y+5000;  System.out.println(MAX_Y);
                         }
                         else if (e.getKeyCode()== 40){
-                           MAX_Y = MAX_Y+5000;  System.out.println(MAX_Y);
+                           MAX_Y = MAX_Y-5000;  System.out.println(MAX_Y);
                         }
                         frame.repaint();
                         
