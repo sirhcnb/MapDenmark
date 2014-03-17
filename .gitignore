@@ -1,6 +1,7 @@
 *.class
 kdv_node_unload.txt
 kdv_unload.txt
+*.properties
 
 # Package Files #
 *.jar
