@@ -32,8 +32,8 @@ public class MapView
 {
     private JFrame frame;
     //min x-coordinate and max y-coordinate, subtracted from to make map origin in 0,0
-    public int MAX_Y = 6403000;
-    public int MIN_X = 441000; 
+    private int MAX_Y = 6403000;
+    private int MIN_X = 441000; 
     public int minWidth = 800;
     public int minHeight = 600;
     public int xDivisor = 600; //initial x-dividant value
@@ -117,7 +117,7 @@ public class MapView
             Graphics2D g2d = (Graphics2D) g;
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             
-            for (int i = 0; i < mm.edges.size(); i++) {
+            for (int i = 0; i < mm.edges.size()-700000; i++) {
                 EdgeData edge = mm.edges.get(i);
                 
                 if(edge.TYP == 8) {
