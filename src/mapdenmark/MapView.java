@@ -51,7 +51,7 @@ public class MapView
     HashMap<Point, String> map = new HashMap<Point, String>();
     ArrayList<Double> distanceList = new ArrayList<Double>();
     HashMap<Double, String> distanceMap = new HashMap<Double, String>();
-    
+        
  
     public MapView()
     {
@@ -130,7 +130,7 @@ public class MapView
                     
                 }
         });
-                }
+                        }
 
                     
  
