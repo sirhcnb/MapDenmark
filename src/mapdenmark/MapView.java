@@ -21,7 +21,16 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.awt.Point;
+import java.util.Collections;
+import java.util.ArrayList;
+
 
  
 /**
@@ -38,12 +47,17 @@ public class MapView
     public int minHeight = 600;
     public int xDivisor = 600; //initial x-dividant value
     public int yDivisor = 600; //initial y-dividant value
+    JLabel roadlabel = new JLabel(); 
+    HashMap<Point, String> map = new HashMap<Point, String>();
+    ArrayList<Double> distanceList = new ArrayList<Double>();
+    HashMap<Double, String> distanceMap = new HashMap<Double, String>();
     
  
     public MapView()
     {
         frame = new JFrame("MapDenmark");
         frame.add(new DrawPanel());
+        frame.add(roadlabel, "South");
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.pack();
         frame.setLocationRelativeTo(null);
@@ -54,6 +68,38 @@ public class MapView
                 System.out.println("Window Resized: Frame");
             }
         });
+        
+         frame.addMouseMotionListener(new MouseMotionListener()
+        {          
+                 
+        @Override
+        public void mouseMoved(MouseEvent e) {
+        int mouseY = e.getY();    
+        int mouseX = e.getX();
+        Point source = new Point(mouseX,mouseY);
+        //roadlabel.setText("X = " + e.getX()*xDivisor + " Y = " + e.getY()*yDivisor);
+        
+        for (Map.Entry<Point, String> entry : map.entrySet()) {
+            distanceMap.put(source.distanceSq(entry.getKey()),entry.getValue()); 
+            distanceList.add(source.distanceSq(entry.getKey()));
+        }
+        
+        Collections.sort(distanceList); 
+
+            Double closest = distanceList.get(0);
+            String name = distanceMap.get(closest);
+            roadlabel.setText(name);
+        
+        distanceList.clear();
+        distanceMap.clear();
+        }    
+        
+        @Override
+        public void mouseDragged(MouseEvent e) {
+        //System.out.println("Mouse dragged");
+        }  
+        
+        });        
         
         frame.addKeyListener(new KeyListener() {
 
@@ -119,6 +165,15 @@ public class MapView
             
             for (int i = 0; i < mm.edges.size()-700000; i++) {
                 EdgeData edge = mm.edges.get(i);
+                
+                int xnode = (int) ((mm.nodes.get(edge.TNODE).X_COORD) - MIN_X);
+                int ynode = (int)(MAX_Y -(mm.nodes.get(edge.FNODE).Y_COORD));
+
+                if(edge.VEJNAVN != "")
+                {
+                    map.put(new Point(xnode/xDivisor,ynode/yDivisor), edge.VEJNAVN);
+                    
+                }
                 
                 if(edge.TYP == 8) {
                     g2d.setColor(Color.GREEN);
