@@ -114,16 +114,16 @@ public class MapView
                         System.out.println("Pressed " + e.getKeyCode());
                         		
                         if (e.getKeyCode() == 37){
-                           MIN_X = MIN_X+5000; System.out.println(MIN_X);
+                           MIN_X = MIN_X-5000; System.out.println(MIN_X);
                         }   
                         else if (e.getKeyCode() == 39){
-                           MIN_X = MIN_X-5000;  System.out.println(MIN_X);
+                           MIN_X = MIN_X+5000;  System.out.println(MIN_X);
                         }   
                         else if (e.getKeyCode() == 38){
-                           MAX_Y = MAX_Y-5000;  System.out.println(MAX_Y);
+                           MAX_Y = MAX_Y+5000;  System.out.println(MAX_Y);
                         }
                         else if (e.getKeyCode()== 40){
-                           MAX_Y = MAX_Y+5000;  System.out.println(MAX_Y);
+                           MAX_Y = MAX_Y-5000;  System.out.println(MAX_Y);
                         }
                         frame.repaint();
                         
@@ -163,7 +163,7 @@ public class MapView
             Graphics2D g2d = (Graphics2D) g;
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             
-            for (int i = 0; i < mm.edges.size()-700000; i++) {
+            for (int i = 0; i < mm.edges.size(); i++) {
                 EdgeData edge = mm.edges.get(i);
                 
                 int xnode = (int) ((mm.nodes.get(edge.TNODE).X_COORD) - MIN_X);
