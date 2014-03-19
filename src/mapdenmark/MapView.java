@@ -41,7 +41,6 @@ import javax.swing.SwingUtilities;
  */
 public class MapView
 {
-
     private JFrame frame;
     //min x-coordinate and max y-coordinate, subtracted from to make map origin in 0,0
     private int MAX_Y = 6403000;
@@ -55,7 +54,7 @@ public class MapView
     ArrayList<Double> distanceList = new ArrayList<Double>();
     HashMap<Double, String> distanceMap = new HashMap<Double, String>();
 
-    public MapView()
+     public MapView()
     {
         frame = new JFrame("MapDenmark");
         frame.add(new DrawPanel());
@@ -73,6 +72,45 @@ public class MapView
             }
         });
 
+<<<<<<< HEAD
+=======
+        frame.addMouseMotionListener(new MouseMotionListener()
+        {
+
+            @Override
+            public void mouseMoved(MouseEvent e)
+            {
+                int mouseY = e.getY();
+                int mouseX = e.getX();
+                Point source = new Point(mouseX, mouseY);
+                //roadlabel.setText("X = " + e.getX()*xDivisor + " Y = " + e.getY()*yDivisor);
+
+                for (Map.Entry<Point, String> entry : map.entrySet())
+                {
+                    distanceMap.put(source.distanceSq(entry.getKey()), entry.getValue());
+                    distanceList.add(source.distanceSq(entry.getKey()));
+                }
+
+                Collections.sort(distanceList);
+
+                Double closest = distanceList.get(0);
+                String name = distanceMap.get(closest);
+                roadlabel.setText(name);
+
+                distanceList.clear();
+                distanceMap.clear();
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e)
+            {
+                //System.out.println("Mouse dragged");
+            }
+
+        });
+    
+
+>>>>>>> 00c4054cd60747a0032df392d70a4b54bd8eebea
         frame.addKeyListener(new KeyListener()
         {
 
@@ -113,6 +151,7 @@ public class MapView
             }
         });
     }
+
 
     class DrawPanel extends JPanel
     {
