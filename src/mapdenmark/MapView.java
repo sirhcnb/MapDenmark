@@ -73,41 +73,6 @@ public class MapView
             }
         });
 
-        frame.addMouseMotionListener(new MouseMotionListener()
-        {
-
-            @Override
-            public void mouseMoved(MouseEvent e)
-            {
-                int mouseY = e.getY();
-                int mouseX = e.getX();
-                Point source = new Point(mouseX, mouseY);
-                //roadlabel.setText("X = " + e.getX()*xDivisor + " Y = " + e.getY()*yDivisor);
-
-                for (Map.Entry<Point, String> entry : map.entrySet())
-                {
-                    distanceMap.put(source.distanceSq(entry.getKey()), entry.getValue());
-                    distanceList.add(source.distanceSq(entry.getKey()));
-                }
-
-                Collections.sort(distanceList);
-
-                Double closest = distanceList.get(0);
-                String name = distanceMap.get(closest);
-                roadlabel.setText(name);
-
-                distanceList.clear();
-                distanceMap.clear();
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent e)
-            {
-                //System.out.println("Mouse dragged");
-            }
-
-        });
-
         frame.addKeyListener(new KeyListener()
         {
 
@@ -158,6 +123,8 @@ public class MapView
         public DrawPanel()
         {
             this.addMouseWheelListener(new ZoomHandler());
+            this.addMouseMotionListener(new StreetNameHandler());
+            
         }
 
         @Override
@@ -228,11 +195,46 @@ public class MapView
             transform.scale(scale, scale);
 
         }
+        private class StreetNameHandler implements MouseMotionListener
+        {
+          @Override
+            public void mouseMoved(MouseEvent e)
+            {
+                int mouseY = e.getY();
+                int mouseX = e.getX();
+                Point source = new Point(mouseX, mouseY);
+                //roadlabel.setText("X = " + e.getX()*xDivisor + " Y = " + e.getY()*yDivisor);
+
+                for (Map.Entry<Point, String> entry : map.entrySet())
+                {
+                    distanceMap.put(source.distanceSq(entry.getKey()), entry.getValue());
+                    distanceList.add(source.distanceSq(entry.getKey()));
+                }
+
+                Collections.sort(distanceList);
+
+                Double closest = distanceList.get(0);
+                String name = distanceMap.get(closest);
+                roadlabel.setText(name);
+
+                distanceList.clear();
+                distanceMap.clear();
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e)
+            {
+                //System.out.println("Mouse dragged");
+            }
+
+        }  
+        
 
         private class ZoomHandler implements MouseWheelListener
         {
             double scale = 1.0;
 
+            @Override
             public void mouseWheelMoved(MouseWheelEvent e)
             {
                 if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL)
