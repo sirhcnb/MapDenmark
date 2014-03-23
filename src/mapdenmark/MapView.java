@@ -33,6 +33,9 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.ArrayList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
 /**
@@ -60,6 +63,14 @@ public class MapView
      public MapView()
     {
         frame = new JFrame("MapDenmark");
+        JMenuBar menubar = new JMenuBar();
+        frame.setJMenuBar(menubar);
+        JMenu fileMenu = new JMenu("Zoom");
+        menubar.add(fileMenu);
+        JMenuItem zoomIn = new JMenuItem("Zoom in");
+        JMenuItem zoomOut = new JMenuItem("Zoom Out");
+        fileMenu.add(zoomIn);
+        fileMenu.add(zoomOut);
         frame.add(new DrawPanel());
         frame.add(roadlabel, "South");
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
