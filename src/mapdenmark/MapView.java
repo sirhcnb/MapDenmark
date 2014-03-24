@@ -227,14 +227,15 @@ public class MapView
                 }
                 else
                 {
-                System.out.println(zoomed);
+                zoomY = (zoomY*yDivisor) - (int)((minHeight/zoomed)/2); 
+                zoomX = (zoomX*xDivisor) - (int)((minWidth/zoomed)/2); 
+                //System.out.println(zoomed);
                 double convY = (e.getY() * yDivisor) /zoomed;
                 double convX = (e.getX() * xDivisor) /zoomed;
-                mouseY = (zoomY*yDivisor) + (int)convY;
-                mouseX = (zoomX*xDivisor) + (int)convX;
-                System.out.println("X " + mouseX + " Y " + mouseY);
-               
+                mouseY = zoomY + (int)convY;
+                mouseX = zoomX + (int)convX;
                 //System.out.println("X " + mouseX + " Y " + mouseY);
+
                 }    
                 
                 Point source = new Point(mouseX, mouseY);
