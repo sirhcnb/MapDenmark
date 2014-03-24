@@ -33,6 +33,9 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.ArrayList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
 /**
@@ -53,10 +56,21 @@ public class MapView
     HashMap<Point, String> map = new HashMap<Point, String>();
     ArrayList<Double> distanceList = new ArrayList<Double>();
     HashMap<Double, String> distanceMap = new HashMap<Double, String>();
+    private double zoomed = 1.0;
+    private int zoomX;
+    private int zoomY;
 
      public MapView()
     {
         frame = new JFrame("MapDenmark");
+        JMenuBar menubar = new JMenuBar();
+        frame.setJMenuBar(menubar);
+        JMenu fileMenu = new JMenu("Zoom");
+        menubar.add(fileMenu);
+        JMenuItem zoomIn = new JMenuItem("Zoom in");
+        JMenuItem zoomOut = new JMenuItem("Zoom Out");
+        fileMenu.add(zoomIn);
+        fileMenu.add(zoomOut);
         frame.add(new DrawPanel());
         frame.add(roadlabel, "South");
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -71,42 +85,6 @@ public class MapView
                 System.out.println("Window Resized: Frame");
             }
         });
-
-        frame.addMouseMotionListener(new MouseMotionListener()
-        {
-
-            @Override
-            public void mouseMoved(MouseEvent e)
-            {
-                int mouseY = e.getY();
-                int mouseX = e.getX();
-                Point source = new Point(mouseX, mouseY);
-                //roadlabel.setText("X = " + e.getX()*xDivisor + " Y = " + e.getY()*yDivisor);
-
-                for (Map.Entry<Point, String> entry : map.entrySet())
-                {
-                    distanceMap.put(source.distanceSq(entry.getKey()), entry.getValue());
-                    distanceList.add(source.distanceSq(entry.getKey()));
-                }
-
-                Collections.sort(distanceList);
-
-                Double closest = distanceList.get(0);
-                String name = distanceMap.get(closest);
-                roadlabel.setText(name);
-
-                distanceList.clear();
-                distanceMap.clear();
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent e)
-            {
-                //System.out.println("Mouse dragged");
-            }
-
-        });
-    
 
         frame.addKeyListener(new KeyListener()
         {
@@ -158,6 +136,7 @@ public class MapView
 
         public DrawPanel()
         {
+            this.addMouseMotionListener(new mouseMotionHandler());
             this.addMouseWheelListener(new ZoomHandler());
         }
 
@@ -196,9 +175,10 @@ public class MapView
                 int xnode = (int) ((mm.nodes.get(edge.TNODE).X_COORD) - MIN_X);
                 int ynode = (int) (MAX_Y - (mm.nodes.get(edge.FNODE).Y_COORD));
 
-                if (edge.VEJNAVN != "")
+                if (edge.VEJNAVN != null && edge.VEJNAVN.length() > 0)
                 {
-                    map.put(new Point(xnode / xDivisor, ynode / yDivisor), edge.VEJNAVN);
+                    map.put(new Point(xnode, ynode), edge.VEJNAVN);
+                    //map.put(new Point(xnode / xDivisor, ynode /yDivisor), edge.VEJNAVN);
 
                 }
 
@@ -230,6 +210,60 @@ public class MapView
 
         }
 
+        
+        private class mouseMotionHandler implements MouseMotionListener 
+        {
+            int mouseY;
+            int mouseX;
+            
+            @Override
+            public void mouseMoved(MouseEvent e)
+            {
+                
+                if(zoomed == 1.0)
+                {    
+                mouseY = e.getY() * xDivisor;
+                mouseX = e.getX() * yDivisor;
+                }
+                else
+                {
+                System.out.println(zoomed);
+                double convY = (e.getY() * yDivisor) /zoomed;
+                double convX = (e.getX() * xDivisor) /zoomed;
+                mouseY = (zoomY*yDivisor) + (int)convY;
+                mouseX = (zoomX*xDivisor) + (int)convX;
+                System.out.println("X " + mouseX + " Y " + mouseY);
+               
+                //System.out.println("X " + mouseX + " Y " + mouseY);
+                }    
+                
+                Point source = new Point(mouseX, mouseY);
+                //roadlabel.setText("X = " + e.getX()*xDivisor + " Y = " + e.getY()*yDivisor);
+
+                for (Map.Entry<Point, String> entry : map.entrySet())
+                {
+                    distanceMap.put(source.distanceSq(entry.getKey()), entry.getValue());
+                    distanceList.add(source.distanceSq(entry.getKey()));
+                }
+
+                Collections.sort(distanceList);
+
+                Double closest = distanceList.get(0);
+                String name = distanceMap.get(closest);
+                roadlabel.setText(name);
+
+                distanceList.clear();
+                distanceMap.clear();
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e)
+            {
+                //System.out.println("Mouse dragged");
+            }
+
+        }
+        
         private class ZoomHandler implements MouseWheelListener
         {
             double scale = 1.0;
@@ -253,11 +287,15 @@ public class MapView
 
                     scale -= (0.1 * e.getWheelRotation());
                     scale = Math.max(0.1, scale);
+                    zoomed = scale;
+                    zoomX = (int)p1.getX();
+                    zoomY = (int)p1.getY();
 
                     transform.setToIdentity();
                     transform.translate(p1.getX(), p1.getY());
                     transform.scale(scale, scale);
                     transform.translate(-p2.getX(), -p2.getY());
+
 
                     DrawPanel.this.revalidate();
                     DrawPanel.this.repaint();
