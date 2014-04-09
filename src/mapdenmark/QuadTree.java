@@ -30,7 +30,7 @@ public class QuadTree {
         this.ID = ID;
     }
 
-    public void split() throws IOException {
+    public void split() {
 
         if (edges.size() > 200) {
 
@@ -141,12 +141,12 @@ public class QuadTree {
     public ArrayList<EdgeData> getEdges()
     {
         if(NW == null) return edges; 
-        ArrayList<EdgeData> e = new ArrayList<>();
-        e.addAll(NW.getEdges());
-        e.addAll(NE.getEdges());
-        e.addAll(SW.getEdges());
-        e.addAll(SE.getEdges());
-        return e;        
+        ArrayList<EdgeData> a = new ArrayList<>();
+        a.addAll(NW.getEdges());
+        a.addAll(NE.getEdges());
+        a.addAll(SW.getEdges());
+        a.addAll(SE.getEdges());
+        return a;        
     }
     
 }

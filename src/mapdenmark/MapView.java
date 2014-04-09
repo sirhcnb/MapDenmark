@@ -52,6 +52,7 @@ public class MapView
     public int minHeight = 600;
     public int xDivisor = 600; //initial x-dividant value
     public int yDivisor = 600; //initial y-dividant value
+    double xmint,ymint,xmin,ymin;
     JLabel roadlabel = new JLabel();
     HashMap<Point, String> map = new HashMap<Point, String>();
     ArrayList<Double> distanceList = new ArrayList<Double>();
@@ -169,20 +170,45 @@ public class MapView
 
             Graphics2D g2d = (Graphics2D) g;
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
+                                    
+            
+            
             for (int i = 0; i < mm.edges.size(); i++)
             {
                 EdgeData edge = mm.edges.get(i);
 
                 int xnode = (int) ((mm.nodes.get(edge.TNODE).X_COORD) - MIN_X);
                 int ynode = (int) (MAX_Y - (mm.nodes.get(edge.FNODE).Y_COORD));
-
+                
                 if (edge.VEJNAVN != null && edge.VEJNAVN.length() > 0)
                 {
                     map.put(new Point(xnode, ynode), edge.VEJNAVN);
                     //map.put(new Point(xnode / xDivisor, ynode /yDivisor), edge.VEJNAVN);
 
                 }
+                
+                for(int r = 0; r < mm.edges.size();r++){
+                
+                    ymint = mm.nodes.get(edge.TNODE).Y_COORD;
+                        if(mm.nodes.get(edge.TNODE).Y_COORD < ymint){
+                   ymint = mm.nodes.get(edge.TNODE).Y_COORD;
+                }
+                 xmint = mm.nodes.get(edge.TNODE).X_COORD;
+                if(mm.nodes.get(edge.TNODE).X_COORD < xmint){
+                   xmint = mm.nodes.get(edge.TNODE).X_COORD;
+                }
+                    
+                 ymin = mm.nodes.get(edge.FNODE).Y_COORD;
+                        if(mm.nodes.get(edge.FNODE).Y_COORD < ymin){
+                   ymin = mm.nodes.get(edge.FNODE).Y_COORD;
+                }
+                 xmin = mm.nodes.get(edge.FNODE).X_COORD;
+                if(mm.nodes.get(edge.FNODE).X_COORD < xmin){
+                   xmin = mm.nodes.get(edge.FNODE).X_COORD;
+                }
+                        }
+                    
+                
 
                 if (edge.TYP == 8)
                 {
@@ -209,7 +235,7 @@ public class MapView
             g2d.setTransform(transform);
 
             transform.scale(scale, scale);
-
+System.out.println(ymint + "," + xmint +","+ymin+","+xmin);
         }
         private class StreetNameHandler implements MouseMotionListener
         {
